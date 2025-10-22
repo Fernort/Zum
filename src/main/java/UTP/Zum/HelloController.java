@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HelloController {
     @GetMapping("/")
     public String saludar(){
-        return "Buenas";
+        return "Buenas como estas";
+        
+        
     }
 }
