@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZUM UTP - Reuniones</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+ 
+  <div th:replace="~{header :: header}"></div>
+  
+  <main class="meetings-container">
+    <h2 class="meetings-title">Reuniones programadas</h2>
+
+    <div class="meetings-list">
+      <div class="meeting-item">
+        <div class="meeting-details">
+          <h3 class="meeting-name">Titulo: Pilas</h3>
+          <p class="meeting-date">Fecha Inicio: 30/10/2025</p>
+          <p class="meeting-time">Hora Inicio: 6:30 pm</p>
+          <p class="meeting-duration">Duración: 1:30</p>
+        </div>
+        <button class="join-button">UNIRSE</button>
+      </div>
+
+      <div class="meeting-item">
+        <div class="meeting-details">
+          <h3 class="meeting-name">Titulo: Colas</h3>
+          <p class="meeting-date">Fecha Inicio: 2/11/2025</p>
+          <p class="meeting-time">Hora Inicio: 6:30 pm</p>
+          <p class="meeting-duration">Duración: 1:30</p>
+        </div>
+        <button class="join-button">UNIRSE</button>
+      </div>
+    </div>
+  </main>
+
+  <footer th:replace="footer :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+  </head>
+  <body>
+    <div th:fragment="header">
+      <header class="header-content">
+        <nav class="nav">
+          <a th:href="@{/}" class="logo-link">ZUM UTP</a>
+
+          <div class="nav-center">
+            <a th:href="@{/}" class="btn-header">Programar</a>
+            <a th:href="@{/}" class="btn-header">Grabaciones</a>
+            <a th:href="@{/}" class="btn-header">Historias</a>
+            
+          </div>
+
+          <div class="nav-right">
+            <div sec:authorize="isAuthenticated()">
+              <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+    </div>
+
+  </body>
+</html>
