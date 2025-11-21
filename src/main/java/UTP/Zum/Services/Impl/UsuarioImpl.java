@@ -1,11 +1,12 @@
 package UTP.Zum.Services.Impl;
 
 import UTP.Zum.Services.UsuarioService;
-import UTP.Zum.Persistencia.Rol;
-import UTP.Zum.Persistencia.Usuario;
 import UTP.Zum.Persistencia.Repository.RolRepository;
 import UTP.Zum.Persistencia.Repository.UsuarioRepository;
 import UTP.Zum.Dto.RegistroRequest;
+import UTP.Zum.Model.Rol;
+import UTP.Zum.Model.Usuario;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,6 @@ public class UsuarioImpl implements UsuarioService{
         u.setCorreoUsuario(registroRequest.getCorreo());
         u.setContraseniaUsuario(passwordEncoder.encode(registroRequest.getContrasenia()));
 
-        // buscar rol ROLE_USER
         Optional<Rol> rolOpt = rolRepository.findByNombreRol("ROLE_USER");
         if (rolOpt.isEmpty()) {
             throw new Exception("Rol ROLE_USER no configurado en la base de datos");

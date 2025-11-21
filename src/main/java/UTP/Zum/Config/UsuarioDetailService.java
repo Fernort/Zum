@@ -1,7 +1,7 @@
 package UTP.Zum.Config;
 
 
-import UTP.Zum.Persistencia.Usuario;
+import UTP.Zum.Model.Usuario;
 import UTP.Zum.Persistencia.Repository.UsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ public class UsuarioDetailService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByCorreoUsuario(correo)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        // mapear rol a granted authority
         SimpleGrantedAuthority auth = new SimpleGrantedAuthority(usuario.getRol().getNombreRol());
         return new User(usuario.getCorreoUsuario(), usuario.getContraseniaUsuario(), Collections.singletonList(auth));
     }

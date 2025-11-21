@@ -1,4 +1,4 @@
-package UTP.Zum.Persistencia;
+package UTP.Zum.Model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
