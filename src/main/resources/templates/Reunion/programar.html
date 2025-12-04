@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Programar Reunión - ZUM UTP</title>
+    <link rel="stylesheet" th:href="@{/Css/styles.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+    <div th:replace="~{header :: header}"></div>
+
+    <main class="programar-container">
+        <h1 class="programar-title">Programar Reunión</h1>
+
+        <!-- mensajes si fue exitoso o nel-->
+        <div th:if="${mensaje}" class="msg success" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="msg error" th:text="${error}"></div>
+
+        <!--formulario para el docente -->
+        <div th:if="${puedeCrear}" class="programar-card">
+            <h2 class="card-subtitle">Detalles de Reunion</h2>
+            
+            <form th:action="@{/programar}" method="post" class="programar-form">
+                <div class="form-group">
+                    <label class="form-label">Titulo</label>
+                    <input type="text" name="titulo" class="form-input" 
+                           placeholder="Ingresar titulo: programación 1" required/>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" name="fecha" class="form-input" required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hora</label>
+                        <input type="time" name="hora" class="form-input" required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duración</label>
+                        <input type="time" name="duracion" class="form-input" value="01:00" required/>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-crear">CREAR REUNION</button>
+            </form>
+        </div>
+
+        <div th:unless="${puedeCrear}" class="no-permiso-card">
+            <div class="no-permiso-icon"><i class="fas fa-lock"></i></div>
+            <h3>Acceso Restringido</h3>
+            <p>Solo los docentes pueden programar reuniones.</p>
+            <p>Puedes unirte a reuniones existentes desde la página principal.</p>
+        </div>
+
+        <!--reuniones programadas-->
+        <div class="reuniones-programadas" th:if="${reuniones != null and !reuniones.isEmpty()}">
+            <h2 class="section-title">Reuniones Programadas</h2>
+            <div class="reuniones-grid">
+                <div th:each="reunion : ${reuniones}" class="reunion-card-mini">
+                    <div class="reunion-info">
+                        <h4 th:text="${reunion.titulo}">Título</h4>
+                        <p><span class="label">Fecha:</span> <span th:text="${#temporals.format(reunion.fecha, 'dd/MM/yyyy')}"></span></p>
+                        <p><span class="label">Hora:</span> <span th:text="${#temporals.format(reunion.horaInicio, 'HH:mm')}"></span></p>
+                        <p><span class="label">Código:</span> <span class="codigo" th:text="${reunion.codigoAcceso}"></span></p>
+                    </div>
+                    <a th:href="@{/sala/{codigo}(codigo=${reunion.codigoAcceso})}" class="btn-unirse-mini">UNIRSE</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="footer :: footer"></footer>
+</body>
+</html>

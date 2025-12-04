@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="stylesheet" th:href="@{/Css/styles.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   </head>
   <body>
     <div th:fragment="header">
       <header class="header-content">
         <nav class="nav">
-          <a th:href="@{/}" class="logo-link">ZUM UTP</a>
+          <a th:href="@{/}" class="logo-link">ZUMM UTP</a>
 
           <div class="nav-center">
-            <a th:href="@{/}" class="btn-header">Programar</a>
-            <a th:href="@{/}" class="btn-header">Grabaciones</a>
-            <a th:href="@{/}" class="btn-header">Historias</a>
-            
+            <a th:href="@{/grabaciones}" class="btn-header">Grabaciones</a>
+            <a th:href="@{/programar}" class="btn-header">Programar</a>
+            <a th:href="@{/historial}" class="btn-header">Historial</a>
           </div>
 
           <div class="nav-right">
-            <div sec:authorize="isAuthenticated()">
+            <div sec:authorize="isAuthenticated()" class="user-area">
+              <div class="user-avatar">
+                <span sec:authentication="name" 
+                      th:with="email=${#authentication.name}"
+                      th:text="${#strings.substring(email, 0, 1).toUpperCase()}">U</span>
+              </div>
               <form th:action="@{/logout}" method="post">
                 <button type="submit" class="btn-logout">Cerrar sesión</button>
               </form>

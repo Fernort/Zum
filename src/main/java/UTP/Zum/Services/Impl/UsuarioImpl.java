@@ -34,12 +34,16 @@ public class UsuarioImpl implements UsuarioService{
         u.setCorreoUsuario(registroRequest.getCorreo());
         u.setContraseniaUsuario(passwordEncoder.encode(registroRequest.getContrasenia()));
 
-        Optional<Rol> rolOpt = rolRepository.findByNombreRol("ROLE_USER");
+        String nombreRol = registroRequest.getRol() != null ? registroRequest.getRol() : "ESTUDIANTE";
+        Optional<Rol> rolOpt = rolRepository.findByNombreRol(nombreRol);
         if (rolOpt.isEmpty()) {
-            throw new Exception("Rol ROLE_USER no configurado en la base de datos");
+            throw new Exception("Rol " + nombreRol + " no configurado en la base de datos");
         }
         u.setRol(rolOpt.get());
 
+
+
+        
         return usuarioRepository.save(u);
     }
 }

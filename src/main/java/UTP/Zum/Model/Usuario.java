@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usuario_id")
@@ -27,7 +26,6 @@ public class Usuario {
 
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaDeCreacion = LocalDateTime.now();
-
 
     public Integer getUsuarioId() { return usuarioId; }
     public void setUsuarioId(Integer usuarioId) { this.usuarioId = usuarioId; }

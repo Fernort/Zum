@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Grabaciones - ZUMM UTP</title>
+    <link rel="stylesheet" th:href="@{/Css/styles.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+    <div th:replace="~{header :: header}"></div>
+
+    <main class="grabaciones-container">
+        <h1 class="page-title">Grabaciones</h1>
+        <p class="page-subtitle">Accede a las grabaciones de tus reuniones anteriores</p>
+
+        <div th:if="${grabaciones != null and !grabaciones.isEmpty()}" class="grabaciones-list">
+            <div th:each="grabacion : ${grabaciones}" class="grabacion-card">
+                <div class="grabacion-thumbnail">
+                    <span class="play-icon"><i class="fas fa-play"></i></span>
+                </div>
+                <div class="grabacion-info">
+                    <h3 th:text="${grabacion.titulo}">Título de la reunión</h3>
+                    <p class="grabacion-meta">
+                        <span th:text="${#temporals.format(grabacion.fecha, 'dd/MM/yyyy')}"></span>
+                        <span th:text="${grabacion.duracionFormateada}"></span>
+                    </p>
+                    <p class="grabacion-creador">
+                        Por: <span th:text="${grabacion.creador.nomUsuario}"></span>
+                    </p>
+                </div>
+                <div class="grabacion-actions">
+                    <button class="btn-ver">Ver grabación</button>
+                    <button class="btn-descargar">Descargar</button>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${grabaciones == null or grabaciones.isEmpty()}" class="empty-state">
+            <div class="empty-icon"><i class="fas fa-film"></i></div>
+            <h3>No hay grabaciones disponibles</h3>
+            <p>Las grabaciones de reuniones aparecerán aquí cuando estén disponibles.</p>
+        </div>
+    </main>
+
+    <footer th:replace="footer :: footer"></footer>
+</body>
+</html>

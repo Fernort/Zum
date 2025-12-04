@@ -9,7 +9,8 @@
 body {
     background: #fff;
 }
-/* ======= mi header ======= */
+
+/*header y footer */
 .header-content {
     background-color: #353434 ;
     color: #fff;
@@ -52,7 +53,31 @@ body {
     color: #1f1f1f;
 }
 
-/* ======= mi footer ======= */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: #555;
+}
 
 .site-footer {
     padding: 18px 40px;
@@ -65,7 +90,7 @@ body {
     font-size: 13px;
 }
 
-/* ======= estilo de login y register ======= */
+/*para la autenticación */
 .auth-page {
     display: flex;
     align-items: center;
@@ -150,7 +175,6 @@ body {
     box-shadow: 0 0 0 3px rgba(136, 136, 136, 0.06);
 }
 
-/*===============botones del inicio===============*/
 .btn {
     display: inline-block;
     padding: 10px 16px;
@@ -203,7 +227,7 @@ body {
     border: 1px solid #252525;
 }
 
-/*===============format del meeting===============*/
+/*css de las reuniones y cuando se programan*/
 .meetings-container {
     max-width: 800px;
     margin: 0 auto;
@@ -276,3 +300,1024 @@ body {
     color: #f5f5f5;
 }
 
+.programar-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: calc(100vh - 120px);
+}
+
+.programar-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.programar-card {
+    background: #fff;
+    border: 2px solid #d0d0d0;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.card-subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.programar-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+}
+
+.form-input {
+    height: 44px;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    border-color: #555;
+}
+
+.form-input::placeholder {
+    color: #999;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+}
+
+.btn-crear {
+    width: 100%;
+    padding: 14px;
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.btn-crear:hover {
+    background: #333;
+    color: #fff;
+}
+
+.no-permiso-card {
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 50px 30px;
+    text-align: center;
+}
+
+.no-permiso-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.no-permiso-card h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.no-permiso-card p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.reuniones-programadas {
+    margin-top: 40px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.reuniones-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.reunion-card-mini {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    transition: box-shadow 0.2s;
+}
+
+.reunion-card-mini:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.reunion-card-mini a {
+    text-decoration: none;
+}
+
+.reunion-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 6px;
+}
+
+.reunion-info p {
+    font-size: 13px;
+    color: #666;
+    margin: 2px 0;
+}
+
+.reunion-info .label {
+    color: #888;
+}
+
+.reunion-info .codigo {
+    font-family: monospace;
+    font-weight: 600;
+    color: #333;
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.btn-unirse-mini {
+    padding: 10px 20px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+.btn-unirse-mini:hover {
+    background: #555;
+    color: #fff;
+    text-decoration: none;
+}
+
+/*la sala css*/
+.sala-body {
+    background: #1a1a1a;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sala-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: #252525;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.sala-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.sala-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.sala-titulo {
+    color: #ccc;
+    font-size: 15px;
+}
+
+.sala-codigo {
+    color: #888;
+    font-size: 13px;
+}
+
+.sala-codigo strong {
+    color: #fff;
+    font-family: monospace;
+}
+
+.sala-header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.sala-tiempo {
+    font-family: monospace;
+    font-size: 16px;
+    color: #fff;
+    background: #333;
+    padding: 6px 14px;
+    border-radius: 6px;
+}
+
+.grabando-badge {
+    background: #c0392b;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.sala-main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.sala-video-area {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.video-container {
+    position: relative;
+    background: #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-container.local video {
+    transform: scaleX(-1);
+}
+
+.video-label {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.7);
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+}
+
+.you-badge {
+    color: #888;
+    font-size: 11px;
+    margin-left: 4px;
+}
+
+.video-status {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.status-icon {
+    font-size: 16px;
+}
+
+.placeholder-avatar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: #444;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+}
+
+.sala-chat {
+    width: 320px;
+    background: #252525;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #333;
+    transition: transform 0.3s;
+    min-height: 0;
+    max-height: 100%;
+}
+
+.sala-chat.hidden {
+    transform: translateX(100%);
+    width: 0;
+    overflow: hidden;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.chat-header h3 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-toggle-chat {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    min-height: 0;
+}
+
+.chat-welcome {
+    text-align: center;
+    padding: 20px;
+}
+
+.chat-welcome p {
+    color: #888;
+    font-size: 13px;
+}
+
+.chat-tip {
+    font-size: 11px !important;
+    margin-top: 8px;
+}
+
+.chat-message {
+    margin-bottom: 12px;
+    padding: 10px;
+    background: #333;
+    border-radius: 8px;
+}
+
+.chat-message.propio {
+    background: #2d4a3e;
+}
+
+.chat-message.sistema {
+    background: transparent;
+    text-align: center;
+}
+
+.msg-nombre {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #aaa;
+    margin-bottom: 4px;
+}
+
+.msg-texto {
+    display: block;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.msg-hora {
+    display: block;
+    font-size: 10px;
+    color: #666;
+    margin-top: 4px;
+    text-align: right;
+}
+
+.msg-sistema {
+    color: #888;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 12px;
+    gap: 8px;
+    border-top: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #333;
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+}
+
+.chat-input::placeholder {
+    color: #666;
+}
+
+.btn-send {
+    padding: 10px 16px;
+    background: #444;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-send:hover {
+    background: #555;
+}
+
+.sala-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #252525;
+    border-top: 1px solid #333;
+    flex-shrink: 0;
+}
+
+.controls-left, .controls-right {
+    width: 200px;
+}
+
+.reunion-info-mini {
+    color: #888;
+    font-size: 13px;
+}
+
+.controls-center {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.control-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 20px;
+    background: #333;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.control-btn:hover {
+    background: #444;
+}
+
+.control-btn.disabled {
+    background: #4a3030;
+}
+
+.control-btn.rec {
+    background: #3a2a2a;
+}
+
+.control-btn.rec:hover {
+    background: #c0392b;
+}
+
+.control-btn.leave {
+    background: #c0392b;
+}
+
+.control-btn.leave:hover {
+    background: #e74c3c;
+}
+
+.control-icon {
+    font-size: 20px;
+}
+
+.control-label {
+    font-size: 11px;
+    color: #aaa;
+}
+
+.participantes-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #888;
+    font-size: 14px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #2a2a2a;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.modal-content h3 {
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.modal-content p {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn-modal {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-modal.cancel {
+    background: #444;
+    color: #fff;
+}
+
+.btn-modal.confirm {
+    background: #c0392b;
+    color: #fff;
+}
+
+/*historial y grabacinoes*/
+.grabaciones-container,
+.historial-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: calc(100vh - 120px);
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.page-subtitle {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.grabaciones-list,
+.historial-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.grabacion-card {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    transition: box-shadow 0.2s;
+}
+
+.grabacion-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.grabacion-thumbnail {
+    width: 160px;
+    height: 90px;
+    background: linear-gradient(135deg, #333, #555);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.play-icon {
+    font-size: 32px;
+    color: #fff;
+    opacity: 0.8;
+}
+
+.grabacion-info {
+    flex: 1;
+}
+
+.grabacion-info h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.grabacion-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.grabacion-creador {
+    font-size: 13px;
+    color: #888;
+}
+
+.grabacion-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-ver,
+.btn-descargar {
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-ver {
+    background: #333;
+    color: #fff;
+    border: none;
+}
+
+.btn-ver:hover {
+    background: #555;
+}
+
+.btn-descargar {
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.btn-descargar:hover {
+    border-color: #333;
+}
+
+.historial-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    transition: box-shadow 0.2s;
+}
+
+.historial-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.historial-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.historial-status.activa {
+    background: #28a745;
+    color: #fff;
+}
+
+.historial-status.finalizada {
+    background: #6c757d;
+    color: #fff;
+}
+
+.historial-content {
+    flex: 1;
+}
+
+.historial-content h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 6px;
+}
+
+.historial-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 13px;
+    color: #666;
+}
+
+.historial-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-accion {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-accion.unirse {
+    background: #333;
+    color: #fff;
+}
+
+.btn-accion.unirse:hover {
+    background: #555;
+    color: #fff;
+}
+
+.badge-grabacion {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #333;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #555;
+    color: #fff;
+}
+
+.empty-icon i,
+.no-permiso-icon i {
+    font-size: 48px;
+    color: #999;
+}
+
+.control-icon i {
+    color: #fff;
+}
+
+.status-icon i {
+    color: #fff;
+    font-size: 14px;
+}
+
+.play-icon i {
+    font-size: 24px;
+}
+
+.btn-send i {
+    color: #fff;
+}
+
+.chat-header h3 i {
+    margin-right: 6px;
+}
+
+.unirse-card {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 30px;
+}
+
+.unirse-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.unirse-form {
+    display: flex;
+    gap: 12px;
+}
+
+.unirse-form .form-input {
+    flex: 1;
+    font-family: monospace;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.input-uppercase {
+    text-transform: uppercase;
+}
+
+.btn-unirse {
+    padding: 12px 28px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-unirse:hover {
+    background: #555;
+}
+
+.meeting-code {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+}
+
+.meeting-code strong {
+    font-family: monospace;
+    background: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #333;
+}
+
+.empty-state-mini {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.empty-state-mini p {
+    margin-bottom: 16px;
+}
+
+/*el responsive*/
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .sala-chat {
+        position: fixed;
+        right: 0;
+        top: 60px;
+        bottom: 80px;
+        z-index: 100;
+    }
+    
+    .grabacion-card {
+        flex-direction: column;
+    }
+    
+    .grabacion-thumbnail {
+        width: 100%;
+        height: 180px;
+    }
+    
+    .grabacion-actions {
+        flex-direction: row;
+    }
+    
+    .historial-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .historial-meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+}

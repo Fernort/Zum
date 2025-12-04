@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="'Sala: ' + ${reunion.titulo} + ' - ZUM UTP'">Sala de Reunión</title>
+    <link rel="stylesheet" th:href="@{/Css/styles.css}"/>
+    <link rel="stylesheet" th:href="@{/Css/sala.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="sala-body">
+    <header class="sala-header">
+        <div class="sala-header-left">
+            <span class="sala-logo">ZUMM UTP</span>
+            <span class="sala-titulo" th:text="${reunion.titulo}">Reunión</span>
+            <span class="sala-codigo">Código: <strong th:text="${reunion.codigoAcceso}"></strong></span>
+        </div>
+        <div class="sala-header-right">
+            <span class="sala-tiempo" id="tiempo">00:00:00</span>
+            <span th:if="${reunion.grabacionHabilitada}" class="grabando-badge"><i class="fas fa-circle rec-dot"></i> REC</span>
+            <span class="conexion-status" id="conexionStatus"><i class="fas fa-plug"></i> Conectando...</span>
+        </div>
+    </header>
+
+    <main class="sala-main">
+        <div class="sala-video-area">
+            <div class="video-grid" id="videoGrid">
+                <div class="video-container local" id="localVideoContainer">
+                    <video id="localVideo" autoplay muted playsinline></video>
+                    <div class="video-label">
+                        <span th:text="${usuario.nomUsuario}">Tu nombre</span>
+                        <span class="you-badge">(Tú)</span>
+                    </div>
+                    <div class="video-status">
+                        <span id="micStatus" class="status-icon"><i class="fas fa-microphone"></i></span>
+                        <span id="camStatus" class="status-icon"><i class="fas fa-video"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="sala-chat" id="chatPanel">
+            <div class="chat-header">
+                <h3><i class="far fa-comment-dots"></i> Chat</h3>
+                <button class="btn-toggle-chat" id="toggleChat">x</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-welcome">
+                    <p>Bienvenido a la reunión</p>
+                    <p class="chat-tip">Los mensajes son visibles para todos.</p>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Escribe un mensaje..." />
+                <button class="btn-send" id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="sala-controls">
+        <div class="controls-left">
+            <div class="reunion-info-mini">
+                <span th:text="${reunion.titulo}">Reunión</span>
+            </div>
+        </div>
+        
+        <div class="controls-center">
+            <button class="control-btn" id="btnMic" title="Activar/Desactivar micrófono">
+                <span class="control-icon" id="micIcon"><i class="fas fa-microphone"></i></span>
+                <span class="control-label">Micro</span>
+            </button>
+            <button class="control-btn" id="btnCam" title="Activar/Desactivar cámara">
+                <span class="control-icon" id="camIcon"><i class="fas fa-video"></i></span>
+                <span class="control-label">Cámara</span>
+            </button>
+            <button class="control-btn" id="btnScreen" title="Compartir pantalla">
+                <span class="control-icon"><i class="fas fa-desktop"></i></span>
+                <span class="control-label">Pantalla</span>
+            </button>
+            <button class="control-btn" id="btnChatToggle" title="Mostrar/Ocultar chat">
+                <span class="control-icon"><i class="far fa-comment-dots"></i></span>
+                <span class="control-label">Chat</span>
+            </button>
+            <button th:if="${puedeGrabar and !reunion.grabacionHabilitada}" 
+                    class="control-btn rec" id="btnRecord" 
+                    onclick="document.getElementById('formGrabar').submit()" 
+                    title="Iniciar grabación">
+                <span class="control-icon"><i class="fas fa-circle"></i></span>
+                <span class="control-label">Grabar</span>
+            </button>
+            
+            <form th:if="${puedeGrabar}" id="formGrabar" th:action="@{/sala/{codigo}/grabar(codigo=${reunion.codigoAcceso})}" method="post" class="hidden-form"></form>
+            
+            <button class="control-btn leave" id="btnLeave" title="Salir de la reunión">
+                <span class="control-icon"><i class="fas fa-phone-slash"></i></span>
+                <span class="control-label">Salir</span>
+            </button>
+        </div>
+        
+        <div class="controls-right">
+            <span class="participantes-count">
+                <span class="control-icon"><i class="fas fa-users"></i></span>
+                <span id="participantCount">1</span>
+            </span>
+        </div>
+    </footer>
+
+    <div class="modal-overlay modal-hidden" id="modalSalir">
+        <div class="modal-content">
+            <h3>¿Salir de la reunión?</h3>
+            <p th:if="${esCreador}">Como creador, al salir se finalizará la reunión para todos.</p>
+            <p th:unless="${esCreador}">¿Estás seguro de que deseas salir?</p>
+            <div class="modal-actions">
+                <button class="btn-modal cancel" id="cancelarSalir">Cancelar</button>
+                <form th:if="${esCreador}" id="formFinalizar" th:action="@{/sala/{codigo}/finalizar(codigo=${reunion.codigoAcceso})}" method="post" class="inline-form">
+                    <button type="button" class="btn-modal confirm" onclick="finalizarReunion()">Finalizar y salir</button>
+                </form>
+                <a th:unless="${esCreador}" th:href="@{/}" class="btn-modal confirm">Salir</a>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*configuracion*/
+        const reunionCodigo = '';
+        const usuarioNombre = '';
+        const usuarioId =  0;
+        const esCreador = false;
+        
+        let micActivo = true;
+        let camActiva = true;
+        let chatVisible = true;
+        let localStream = null;
+        let ws = null;
+        let myPeerId = null;
+        let peerConnections = {};
+        let participantes = 1;
+        let participantesInfo = {};
+        let screenStream = null;
+        let isScreenSharing = false;
+        let pendingIceCandidates = {};
+        
+        const iceServers = {
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+        };
+        
+        const localVideo = document.getElementById('localVideo');
+        const videoGrid = document.getElementById('videoGrid');
+        const btnMic = document.getElementById('btnMic');
+        const btnCam = document.getElementById('btnCam');
+        const btnScreen = document.getElementById('btnScreen');
+        const btnChatToggle = document.getElementById('btnChatToggle');
+        const btnLeave = document.getElementById('btnLeave');
+        const chatPanel = document.getElementById('chatPanel');
+        const chatInput = document.getElementById('chatInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const toggleChat = document.getElementById('toggleChat');
+        const modalSalir = document.getElementById('modalSalir');
+        const cancelarSalir = document.getElementById('cancelarSalir');
+        const tiempoElement = document.getElementById('tiempo');
+        const conexionStatus = document.getElementById('conexionStatus');
+        const participantCount = document.getElementById('participantCount');
+        
+        async function iniciarMedia() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 640, height: 480 },
+                    audio: true
+                });
+                localVideo.srcObject = localStream;
+                updateMediaStatus();
+                agregarMensajeSistema('Cámara y micrófono conectados');
+                return true;
+            } catch (err) {
+                agregarMensajeSistema('No se pudo acceder a la cámara o micrófono.');
+                try {
+                    localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    camActiva = false;
+                    updateMediaStatus();
+                    agregarMensajeSistema('Solo audio disponible');
+                    return true;
+                } catch (audioErr) {
+                    agregarMensajeSistema('No se pudo acceder a ningún dispositivo');
+                    return false;
+                }
+            }
+        }
+        
+        function conectarWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsPath = '/ws/signal';
+            const wsUrl = `${protocol}//${window.location.host}${wsPath}`;
+            
+            ws = new WebSocket(wsUrl);
+            myPeerId = `zum-${reunionCodigo}-${usuarioId}-${Date.now()}`;
+            
+            ws.onopen = () => {
+                conexionStatus.innerHTML = '<i class="fas fa-check-circle"></i> Conectado';
+                conexionStatus.className = 'conexion-status connected';
+                ws.send(JSON.stringify({
+                    type: 'join',
+                    room: reunionCodigo,
+                    peerId: myPeerId,
+                    nombre: usuarioNombre,
+                    usuarioId: usuarioId
+                }));
+                agregarMensajeSistema('Conectado a la sala');
+            };
+            
+            ws.onmessage = async (event) => {
+                const data = JSON.parse(event.data);
+                
+                switch (data.type) {
+                    case 'existing-participants':
+                        for (const p of data.participants) {
+                            participantesInfo[p.peerId] = { nombre: p.nombre, usuarioId: p.usuarioId };
+                            await new Promise(resolve => setTimeout(resolve, 100));
+                            await crearOferta(p.peerId);
+                        }
+                        break;
+                    case 'user-joined':
+                        participantesInfo[data.peerId] = { nombre: data.nombre, usuarioId: data.usuarioId };
+                        agregarMensajeSistema(`${data.nombre} se ha unido a la reunión`);
+                        actualizarContadorParticipantes(1);
+                        break;
+                    case 'user-left':
+                        eliminarVideoRemoto(data.peerId);
+                        agregarMensajeSistema(`${data.nombre} ha salido de la reunión`);
+                        actualizarContadorParticipantes(-1);
+                        delete participantesInfo[data.peerId];
+                        if (peerConnections[data.peerId]) {
+                            peerConnections[data.peerId].close();
+                            delete peerConnections[data.peerId];
+                        }
+                        break;
+                    case 'offer':
+                        await manejarOferta(data);
+                        break;
+                    case 'answer':
+                        await manejarRespuesta(data);
+                        break;
+                    case 'ice-candidate':
+                        await manejarIceCandidate(data);
+                        break;
+                    case 'chat':
+                        agregarMensaje(data.nombre, data.texto, false);
+                        break;
+                }
+            };
+            
+            ws.onclose = () => {
+                conexionStatus.innerHTML = '<i class="fas fa-sync"></i> Reconectando...';
+                conexionStatus.className = 'conexion-status reconnecting';
+                setTimeout(() => {
+                    if (ws.readyState === WebSocket.CLOSED) conectarWebSocket();
+                }, 3000);
+            };
+            
+            ws.onerror = () => {
+                conexionStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
+                conexionStatus.className = 'conexion-status error';
+            };
+        }
+        
+        /*webrtc */
+        function crearPeerConnection(remotePeerId) {
+            if (peerConnections[remotePeerId]) {
+                peerConnections[remotePeerId].close();
+                delete peerConnections[remotePeerId];
+            }
+            
+            const pc = new RTCPeerConnection(iceServers);
+            
+            const streamToShare = isScreenSharing && screenStream ? screenStream : localStream;
+            if (streamToShare) {
+                streamToShare.getTracks().forEach(track => {
+                    pc.addTrack(track, streamToShare);
+                });
+            }
+            
+            pc.onicecandidate = (event) => {
+                if (event.candidate && ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'ice-candidate',
+                        target: remotePeerId,
+                        candidate: event.candidate
+                    }));
+                }
+            };
+            
+            pc.ontrack = (event) => {
+                const remoteStream = event.streams[0];
+                if (remoteStream) {
+                    const info = participantesInfo[remotePeerId] || { nombre: 'Participante' };
+                    agregarVideoRemoto(remotePeerId, remoteStream, info.nombre);
+                }
+            };
+            
+            pc.onconnectionstatechange = () => {
+                if (pc.connectionState === 'connected') {
+                    agregarMensajeSistema('Conexión establecida con ' + (participantesInfo[remotePeerId]?.nombre || 'participante'));
+                }
+                if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed') {
+                    eliminarVideoRemoto(remotePeerId);
+                }
+            };
+            
+            peerConnections[remotePeerId] = pc;
+            return pc;
+        }
+        
+        async function crearOferta(remotePeerId) {
+            const pc = crearPeerConnection(remotePeerId);
+            try {
+                const offer = await pc.createOffer({
+                    offerToReceiveAudio: true,
+                    offerToReceiveVideo: true
+                });
+                await pc.setLocalDescription(offer);
+                ws.send(JSON.stringify({
+                    type: 'offer',
+                    target: remotePeerId,
+                    offer: pc.localDescription
+                }));
+            } catch (error) {}
+        }
+        
+        async function manejarOferta(data) {
+            if (!participantesInfo[data.from] && data.fromNombre) {
+                participantesInfo[data.from] = { nombre: data.fromNombre };
+            }
+            
+            const pc = crearPeerConnection(data.from);
+            try {
+                await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+                await procesarIceCandidatesPendientes(data.from);
+                
+                const answer = await pc.createAnswer();
+                await pc.setLocalDescription(answer);
+                ws.send(JSON.stringify({
+                    type: 'answer',
+                    target: data.from,
+                    answer: pc.localDescription
+                }));
+            } catch (error) {}
+        }
+        
+        async function manejarRespuesta(data) {
+            const pc = peerConnections[data.from];
+            if (pc && pc.signalingState === 'have-local-offer') {
+                try {
+                    await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+                    await procesarIceCandidatesPendientes(data.from);
+                } catch (error) {}
+            }
+        }
+        
+        async function manejarIceCandidate(data) {
+            const pc = peerConnections[data.from];
+            if (data.candidate) {
+                if (pc && pc.remoteDescription) {
+                    try {
+                        await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+                    } catch (error) {}
+                } else {
+                    if (!pendingIceCandidates[data.from]) {
+                        pendingIceCandidates[data.from] = [];
+                    }
+                    pendingIceCandidates[data.from].push(data.candidate);
+                }
+            }
+        }
+        
+        async function procesarIceCandidatesPendientes(peerId) {
+            const pc = peerConnections[peerId];
+            const candidates = pendingIceCandidates[peerId] || [];
+            
+            for (const candidate of candidates) {
+                try {
+                    await pc.addIceCandidate(new RTCIceCandidate(candidate));
+                } catch (error) {}
+            }
+            
+            delete pendingIceCandidates[peerId];
+        }
+        
+        function agregarVideoRemoto(peerId, stream, nombre = 'Participante') {
+            
+            let container = document.getElementById(`video-${peerId}`);
+            let video;
+            
+            if (container) {
+                video = container.querySelector('video');
+                if (video) {
+                    video.srcObject = stream;
+                    video.play().catch(() => {});
+                }
+                return;
+            }
+            
+            container = document.createElement('div');
+            container.className = 'video-container remote';
+            container.id = `video-${peerId}`;
+            
+            video = document.createElement('video');
+            video.srcObject = stream;
+            video.autoplay = true;
+            video.playsinline = true;
+            video.muted = false;
+            
+            stream.onaddtrack = () => {
+                video.srcObject = stream;
+            };
+            
+            video.play().catch(() => {
+                const playBtn = document.createElement('button');
+                playBtn.className = 'btn-play-remote';
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.onclick = () => {
+                    video.play();
+                    playBtn.remove();
+                };
+                container.appendChild(playBtn);
+            });
+            
+            const label = document.createElement('div');
+            label.className = 'video-label';
+            label.innerHTML = `<span>${nombre}</span>`;
+            
+            container.appendChild(video);
+            container.appendChild(label);
+            videoGrid.appendChild(container);
+        }
+        
+        function eliminarVideoRemoto(peerId) {
+            const container = document.getElementById(`video-${peerId}`);
+            if (container) {
+                const video = container.querySelector('video');
+                if (video && video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    video.srcObject = null;
+                }
+                container.remove();
+            }
+        }
+        
+        function actualizarContadorParticipantes(delta) {
+            participantes = Math.max(1, participantes + delta);
+            participantCount.textContent = participantes;
+        }
+        
+        function updateMediaStatus() {
+            const micStatusEl = document.getElementById('micStatus');
+            const camStatusEl = document.getElementById('camStatus');
+            const micIconEl = document.getElementById('micIcon');
+            const camIconEl = document.getElementById('camIcon');
+            
+            micStatusEl.innerHTML = micActivo ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
+            camStatusEl.innerHTML = camActiva ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
+            micIconEl.innerHTML = micActivo ? '<i class="fas fa-microphone"></i>' : '<i class="fas fa-microphone-slash"></i>';
+            camIconEl.innerHTML = camActiva ? '<i class="fas fa-video"></i>' : '<i class="fas fa-video-slash"></i>';
+            
+            btnMic.classList.toggle('disabled', !micActivo);
+            btnCam.classList.toggle('disabled', !camActiva);
+        }
+        
+        btnMic.addEventListener('click', () => {
+            if (localStream) {
+                micActivo = !micActivo;
+                localStream.getAudioTracks().forEach(track => track.enabled = micActivo);
+                updateMediaStatus();
+                agregarMensajeSistema(micActivo ? 'Micrófono activado' : 'Micrófono silenciado');
+            }
+        });
+        
+        btnCam.addEventListener('click', () => {
+            if (localStream) {
+                camActiva = !camActiva;
+                localStream.getVideoTracks().forEach(track => track.enabled = camActiva);
+                updateMediaStatus();
+                agregarMensajeSistema(camActiva ? 'Cámara activada' : 'Cámara desactivada');
+            }
+        });
+        
+        btnScreen.addEventListener('click', async () => {
+            if (isScreenSharing && screenStream) {
+                detenerCompartirPantalla();
+                return;
+            }
+            
+            try {
+                screenStream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { cursor: 'always', width: { ideal: 1920 }, height: { ideal: 1080 } },
+                    audio: false
+                });
+                
+                const screenTrack = screenStream.getVideoTracks()[0];
+                isScreenSharing = true;
+                localVideo.srcObject = screenStream;
+                btnScreen.classList.add('active');
+                btnScreen.querySelector('.control-label').textContent = 'Detener';
+                
+                await reemplazarVideoTrack(screenTrack);
+                
+                agregarMensajeSistema('Compartiendo pantalla');
+                screenTrack.onended = () => detenerCompartirPantalla();
+            } catch (err) {
+                isScreenSharing = false;
+            }
+        });
+        
+        async function reemplazarVideoTrack(newTrack) {
+            const replacePromises = [];
+            
+            Object.entries(peerConnections).forEach(([peerId, pc]) => {
+                const videoSender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                if (videoSender) {
+                    replacePromises.push(videoSender.replaceTrack(newTrack));
+                } else {
+                    const stream = new MediaStream([newTrack]);
+                    pc.addTrack(newTrack, stream);
+                    replacePromises.push(renegociarConexion(peerId, pc));
+                }
+            });
+            
+            await Promise.all(replacePromises);
+        }
+        
+        async function renegociarConexion(peerId, pc) {
+            try {
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                ws.send(JSON.stringify({
+                    type: 'offer',
+                    target: peerId,
+                    offer: pc.localDescription
+                }));
+            } catch (error) {}
+        }
+        
+        function detenerCompartirPantalla() {
+            if (!isScreenSharing) return;
+            isScreenSharing = false;
+            
+            if (screenStream) {
+                screenStream.getTracks().forEach(track => track.stop());
+                screenStream = null;
+            }
+            
+            localVideo.srcObject = localStream;
+            btnScreen.classList.remove('active');
+            btnScreen.querySelector('.control-label').textContent = 'Pantalla';
+            
+            const originalVideoTrack = localStream ? localStream.getVideoTracks()[0] : null;
+            if (originalVideoTrack) {
+                reemplazarVideoTrack(originalVideoTrack);
+            }
+            agregarMensajeSistema('Dejó de compartir pantalla');
+        }
+        
+        /*mensajes */
+        btnChatToggle.addEventListener('click', () => {
+            chatVisible = !chatVisible;
+            chatPanel.classList.toggle('hidden', !chatVisible);
+        });
+        
+        toggleChat.addEventListener('click', () => {
+            chatVisible = false;
+            chatPanel.classList.add('hidden');
+        });
+        
+        function agregarMensaje(nombre, texto, esPropio = false) {
+            const div = document.createElement('div');
+            div.className = 'chat-message' + (esPropio ? ' propio' : '');
+            div.innerHTML = `
+                <span class="msg-nombre">${nombre}</span>
+                <span class="msg-texto">${texto}</span>
+                <span class="msg-hora">${new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'})}</span>
+            `;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function agregarMensajeSistema(texto) {
+            const div = document.createElement('div');
+            div.className = 'chat-message sistema';
+            div.innerHTML = `<span class="msg-sistema">${texto}</span>`;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        document.getElementById('sendMessage').addEventListener('click', enviarMensaje);
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') enviarMensaje(); });
+        
+        function enviarMensaje() {
+            const texto = chatInput.value.trim();
+            if (texto && ws && ws.readyState === WebSocket.OPEN) {
+                agregarMensaje(usuarioNombre, texto, true);
+                ws.send(JSON.stringify({ type: 'chat', texto: texto }));
+                chatInput.value = '';
+            }
+        }
+        
+        btnLeave.addEventListener('click', () => { 
+            modalSalir.classList.remove('modal-hidden');
+            modalSalir.classList.add('modal-visible');
+        });
+        cancelarSalir.addEventListener('click', () => { 
+            modalSalir.classList.remove('modal-visible');
+            modalSalir.classList.add('modal-hidden');
+        });
+        
+        function finalizarReunion() {
+            document.getElementById('formFinalizar').submit();
+        }
+        
+        let segundos = 0;
+        setInterval(() => {
+            segundos++;
+            const h = Math.floor(segundos / 3600);
+            const m = Math.floor((segundos % 3600) / 60);
+            const s = segundos % 60;
+            tiempoElement.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }, 1000);
+        
+        window.addEventListener('load', async () => {
+            const mediaOk = await iniciarMedia();
+            if (mediaOk) conectarWebSocket();
+        });
+        
+        window.addEventListener('beforeunload', () => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'leave' }));
+                ws.close();
+            }
+            Object.values(peerConnections).forEach(pc => pc.close());
+            if (localStream) localStream.getTracks().forEach(track => track.stop());
+        });
+    </script>
+</body>
+</html>

@@ -2,14 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/>
-  <title>Registro - Zum UTP</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  <title>Registro - ZUMM UTP</title>
+  <link rel="stylesheet" th:href="@{/Css/styles.css}" />
+  <link rel="stylesheet" th:href="@{/Css/register.css}" />
 </head>
 <body>
   <main class="auth-page">
     <div class="auth-left">
       <div class="logo-box">
-        <div class="logo-text">ZUM UTP</div>
+        <div class="logo-text">ZUMM UTP</div>
       </div>
     </div>
 
@@ -19,15 +20,31 @@
 
         <div th:if="${error}" class="msg error" th:text="${error}"></div>
 
-        <form th:action="@{/registro}" method="post" class="auth-form" th:object="${registroRequest}">
+        <form th:action="@{/registro}" method="post" class="auth-form">
           <label class="field-label">Nombre</label>
-          <input class="field-input" type="text" name="nombre" placeholder="Username" required />
+          <input class="field-input" type="text" name="nombre" placeholder="Tu nombre completo" required />
 
           <label class="field-label">Correo</label>
-          <input class="field-input" type="email" name="correo" placeholder="Correo" required />
+          <input class="field-input" type="email" name="correo" placeholder="correo@ejemplo.com" required />
 
           <label class="field-label">Contraseña</label>
-          <input class="field-input" type="password" name="contrasenia" placeholder="Password" required />
+          <input class="field-input" type="password" name="contrasenia" placeholder="Tu contraseña" required />
+
+          <label class="field-label">Tipo de usuario</label>
+          <div class="role-selector">
+            <label class="role-option">
+              <input type="radio" name="rol" value="ESTUDIANTE" checked />
+              <span class="role-card">
+                <span class="role-name">Estudiante</span>
+              </span>
+            </label>
+            <label class="role-option">
+              <input type="radio" name="rol" value="DOCENTE" />
+              <span class="role-card">
+                <span class="role-name">Docente</span>
+              </span>
+            </label>
+          </div>
 
           <button type="submit" class="btn primary inicio">Registrarse</button>
 
@@ -40,6 +57,5 @@
   </main>
 
   <div th:replace="~{footer :: footer}"></div>
-
 </body>
 </html>

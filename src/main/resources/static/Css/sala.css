@@ -1,0 +1,120 @@
+/*la conexión websocket */
+.conexion-status {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #444;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.conexion-status.connected {
+    background: #2d4a3e;
+}
+
+.conexion-status.reconnecting {
+    background: #4a4a30;
+}
+
+.conexion-status.error {
+    background: #4a3030;
+}
+
+.rec-dot {
+    color: #ff4444;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.sharing-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #2563eb;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 10;
+}
+
+.sharing-badge i {
+    font-size: 10px;
+}
+
+.video-container.screen-share {
+    border: 2px solid #2563eb;
+}
+
+.video-container.screen-share .video-label {
+    background: linear-gradient(to top, rgba(37, 99, 235, 0.9), transparent);
+}
+
+.control-btn.active {
+    background: #2563eb !important;
+    color: white;
+}
+
+.control-btn.active .control-icon {
+    color: white;
+}
+
+.control-btn.active .control-label {
+    color: white;
+}
+
+.hidden-form {
+    display: none;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.modal-hidden {
+    display: none;
+}
+
+.modal-visible {
+    display: flex;
+}
+
+.btn-play-remote {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-play-remote:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: #fff;
+}
+
+.btn-play-remote i {
+    font-size: 24px;
+    color: #333;
+    margin-left: 4px;
+}
+

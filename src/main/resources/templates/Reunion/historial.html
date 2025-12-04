@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Historial - ZUM UTP</title>
+    <link rel="stylesheet" th:href="@{/Css/styles.css}"/>
+    <link rel="stylesheet" th:href="@{/Css/historial.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+    <div th:replace="~{header :: header}"></div>
+
+    <main class="historial-container">
+        <h1 class="page-title">Historial de Reuniones</h1>
+        <p class="page-subtitle" th:if="${esDocente}">Reuniones que has creado</p>
+        <p class="page-subtitle" th:unless="${esDocente}">Todas las reuniones disponibles</p>
+
+        <div th:if="${reuniones != null and !reuniones.isEmpty()}" class="historial-list">
+            <div th:each="reunion : ${reuniones}" class="historial-card">
+                <div class="historial-status" th:classappend="${reunion.activa} ? 'activa' : 'finalizada'">
+                    <span th:if="${reunion.activa}">Activa</span>
+                    <span th:unless="${reunion.activa}">Finalizada</span>
+                </div>
+                <div class="historial-content">
+                    <h3 th:text="${reunion.titulo}">Título de la reunión</h3>
+                    <div class="historial-meta">
+                        <span th:text="${#temporals.format(reunion.fecha, 'dd/MM/yyyy')}"></span>
+                        <span th:text="${#temporals.format(reunion.horaInicio, 'HH:mm')}"></span>
+                        <span th:text="${reunion.duracionFormateada}"></span>
+                        <span th:text="${reunion.codigoAcceso}"></span>
+                    </div>
+                    <!-- Mostrar creador solo para estudiantes -->
+                    <p th:unless="${esDocente}" class="historial-creador">
+                        Creado por: <span th:text="${reunion.creador.nomUsuario}"></span>
+                    </p>
+                </div>
+                <div class="historial-actions">
+                    <a th:if="${reunion.activa}" 
+                       th:href="@{/sala/{codigo}(codigo=${reunion.codigoAcceso})}" 
+                       class="btn-accion unirse">Unirse</a>
+                    <span th:if="${reunion.grabacionHabilitada}" class="badge-grabacion">Grabado</span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${reuniones == null or reuniones.isEmpty()}" class="empty-state">
+            <div class="empty-icon"><i class="far fa-calendar-alt"></i></div>
+            <h3 th:if="${esDocente}">No has creado reuniones aún</h3>
+            <h3 th:unless="${esDocente}">No hay reuniones disponibles</h3>
+            <p th:if="${esDocente}">Las reuniones que crees aparecerán aquí.</p>
+            <p th:unless="${esDocente}">Las reuniones creadas por docentes aparecerán aquí.</p>
+            <a th:if="${esDocente}" th:href="@{/programar}" class="btn-primary">Programar primera reunión</a>
+        </div>
+    </main>
+
+    <footer th:replace="footer :: footer"></footer>
+</body>
+</html>

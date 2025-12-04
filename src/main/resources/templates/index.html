@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ZUM UTP - Reuniones</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+  <title>ZUMM UTP - Reuniones</title>
+  <link rel="stylesheet" th:href="@{/Css/styles.css}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
  
@@ -13,26 +14,35 @@
   <main class="meetings-container">
     <h2 class="meetings-title">Reuniones programadas</h2>
 
-    <div class="meetings-list">
-      <div class="meeting-item">
-        <div class="meeting-details">
-          <h3 class="meeting-name">Titulo: Pilas</h3>
-          <p class="meeting-date">Fecha Inicio: 30/10/2025</p>
-          <p class="meeting-time">Hora Inicio: 6:30 pm</p>
-          <p class="meeting-duration">Duración: 1:30</p>
-        </div>
-        <button class="join-button">UNIRSE</button>
-      </div>
+    <!--para unirse con código -->
+    <div class="unirse-card">
+      <h3>Unirse a una reunión</h3>
+      <form th:action="@{/unirse}" method="post" class="unirse-form">
+        <input type="text" name="codigo" placeholder="Ingresa el código de reunión" class="form-input input-uppercase" required maxlength="8"/>
+        <button type="submit" class="btn-unirse">UNIRSE</button>
+      </form>
+    </div>
 
-      <div class="meeting-item">
+    <div th:if="${error}" class="msg error" th:text="${error}"></div>
+
+    <!--lista de las reuniones -->
+    <div th:if="${reuniones != null and !reuniones.isEmpty()}" class="meetings-list">
+      <div th:each="reunion : ${reuniones}" class="meeting-item">
         <div class="meeting-details">
-          <h3 class="meeting-name">Titulo: Colas</h3>
-          <p class="meeting-date">Fecha Inicio: 2/11/2025</p>
-          <p class="meeting-time">Hora Inicio: 6:30 pm</p>
-          <p class="meeting-duration">Duración: 1:30</p>
+          <h3 class="meeting-name" th:text="'Titulo: ' + ${reunion.titulo}">Titulo: Reunión</h3>
+          <p class="meeting-date" th:text="'Fecha Inicio: ' + ${#temporals.format(reunion.fecha, 'dd/MM/yyyy')}">Fecha Inicio: 30/10/2025</p>
+          <p class="meeting-time" th:text="'Hora Inicio: ' + ${#temporals.format(reunion.horaInicio, 'HH:mm')}">Hora Inicio: 6:30 pm</p>
+          <p class="meeting-duration" th:text="'Duración: ' + ${reunion.duracionFormateada}">Duración: 1:30</p>
+          <p class="meeting-code">Código: <strong th:text="${reunion.codigoAcceso}">ABC123</strong></p>
         </div>
-        <button class="join-button">UNIRSE</button>
+        <a th:href="@{/sala/{codigo}(codigo=${reunion.codigoAcceso})}" class="join-button">UNIRSE</a>
       </div>
+    </div>
+
+    <!--por si no hay nada -->
+    <div th:if="${reuniones == null or reuniones.isEmpty()}" class="empty-state-mini">
+      <p>No hay reuniones programadas próximamente.</p>
+      <a th:href="@{/programar}" class="btn-primary" sec:authorize="hasAnyAuthority('DOCENTE', 'ROLE_DOCENTE')">Programar una reunión</a>
     </div>
   </main>
 
