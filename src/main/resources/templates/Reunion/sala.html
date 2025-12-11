@@ -122,10 +122,10 @@
 
     <script th:inline="javascript">
         /*configuracion*/
-        const reunionCodigo = '';
-        const usuarioNombre = '';
-        const usuarioId =  0;
-        const esCreador = false;
+        const reunionCodigo = /*[[${reunion.codigoAcceso}]]*/ '';
+        const usuarioNombre = /*[[${usuario.nomUsuario}]]*/ '';
+        const usuarioId = /*[[${usuario.usuarioId}]]*/ 0;
+        const esCreador = /*[[${esCreador}]]*/ false;
         
         let micActivo = true;
         let camActiva = true;
@@ -188,7 +188,8 @@
         
         function conectarWebSocket() {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsPath = '/ws/signal';
+            const contextPath = /*[[${@servletContext.contextPath}]]*/ '';
+            const wsPath = contextPath + '/ws/signal';
             const wsUrl = `${protocol}//${window.location.host}${wsPath}`;
             
             ws = new WebSocket(wsUrl);
